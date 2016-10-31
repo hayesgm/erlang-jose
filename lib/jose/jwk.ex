@@ -697,6 +697,17 @@ defmodule JOSE.JWK do
       end
     end)
   end
+  # TODO: Test
+  # TODO: Doc
+  def verify_strict(signed, allow, jwk) when is_map(jwk) do
+    token = JOSE.JWT.from_binary(signed)
+    kid = token.fields["kid"]
+
+    case jwk[kid] do
+      nil -> {:error, "kid #{kid} not found"}
+      key -> verify_strict(signed, allow, key)
+    end
+  end
   def verify_strict(signed, allow, jwk) do
     try do
       case :jose_jwk.verify_strict(signed, allow, jwk) do

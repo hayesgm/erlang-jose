@@ -700,8 +700,8 @@ defmodule JOSE.JWK do
   # TODO: Test
   # TODO: Doc
   def verify_strict(signed, allow, jwk) when is_map(jwk) do
-    token = JOSE.JWT.from_binary(signed)
-    kid = token.fields["kid"]
+    payload = JOSE.JWT.peek_payload(signed)
+    kid = payload.fields["kid"]
 
     case jwk[kid] do
       nil -> {:error, "kid #{kid} not found"}
